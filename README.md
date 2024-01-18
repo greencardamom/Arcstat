@@ -92,6 +92,10 @@ I use the following setup with 2 VPNs:
 
 	The files crontab-argos.txt, crontab-quepasa.txt and crontab-luego.txt are the crontabs for each machine. Adjust the paths.
 
+How it works
+=========
+Once a month, for a given wiki, arcstat.awk downloads a list of all article titles currently in existence. It goes through this list downloading the page and counting the number of links. The stats are saved to a cache file so future runs of arcstat "remember" the stats in case the page has not changed since the last run, it is more efficient. When complete, the total results are summed and saved to ~/db/master.db which is 1 line per 1 run (month) of arcstat. Once a day or so, makehtml.awk takes as input master.db and formats the HTML page and uploads the results to Toolforge via push.csh
+
 Notes
 =========
 
