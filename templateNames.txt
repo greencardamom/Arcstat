@@ -1,0 +1,28 @@
+en.wiktionary.org|Template:cite-book
+fr.wiktionary.org|Modèle:ouvrage
+ca.wikiquote.org|Plantilla:Ref-llibre
+uk.wikipedia.org|Шаблон:Cite book
+cs.wikipedia.org|Šablona:Citace monografie
+gl.wikipedia.org|Modelo:Cita libro
+zh-yue.wikipedia.org|Template:引書
+hu.wikipedia.org|Sablon:Hivatkozás/Könyv
+ko.wikipedia.org|틀:서적 인용
+lv.wikipedia.org|Veidne:Grāmatas atsauce
+pt.wikipedia.org|Predefinição:Citar livro
+de.wikipedia.org|Vorlage:Literatur
+fr.wikipedia.org|Modèle:Ouvrage
+it.wikipedia.org|Template:Cita libro
+ckb.wikipedia.org| داڕێژە:Cite book
+als.wikipedia.org|Vorlage:Literatur
+bar.wikipedia.org|Vorlog:Literatur
+es.wikipedia.org|Plantilla:Cita libro
+ru.wikipedia.org|Шаблон:Книга
+nl.wikipedia.org|Sjabloon:Citeer boek
+no.wikipedia.org|Mal:Kilde bok
+zh.wikipedia.org|Template:Cite book
+sv.wikipedia.org|Mall:Bokref
+en.wikipedia.org|Template:Cite book
+sr.wikipedia.org|Шаблон:Cite book
+species.wikimedia.org|
+bn.wikipedia.org|
+
