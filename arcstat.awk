@@ -132,7 +132,7 @@ function startup() {
     sys2var(Exe["mkdir"] " " P["iadetails"])
   if(!checkexists(P["db"]))
     sys2var(Exe["mkdir"] " " P["db"])
-  if(!checkexists(P["db"]) "masterbak")
+  if(!checkexists(P["db"] "masterbak/"))
     sys2var(Exe["mkdir"] " " P["db"] "masterbak")
 
   if(checkexists(P["db"] P["key"] ".index.db.gz"))
