@@ -2,7 +2,7 @@ Arcstat
 ===========
 Arcstat creates statistics of archive URL usage on Wikipedia. The output:
 
-	https://tools-static.wmflabs.org/botwikiawk/dashboard.html
+* https://tools-static.wmflabs.org/botwikiawk/dashboard.html
 
 The product is "Dashboard Classic" and the program is "Arcstat".
 
@@ -25,8 +25,9 @@ I use this setup:
 * A VPN provider with at least 2 IPs, preferably with gateways nearby Ashburn, VA where MediaWiki hosts. Low network latency is key.
 
 * Oracle Virtualbox
-** Guest additions
-** Networking->Bridged adapter
+
+        Guest additions
+        Networking->Bridged adapter
 
 * 2 VMs of 8 CPU and 3 GB RAM each
 
@@ -35,25 +36,28 @@ I use this setup:
 * The host is 'argos' and the VMs are 'quepasa' and 'luego'
 
 * In all three machines install BotWikiAwk library:
-	cd ~ 
-	git clone 'https://github.com/greencardamom/BotWikiAwk'
-	export AWKPATH=.:/home/user/BotWikiAwk/lib:/usr/share/awk
-	export PATH=$PATH:/home/user/BotWikiAwk/bin
-	cd ~/BotWikiAwk
-	./setup.sh
-	read SETUP for further instructions like setting up email
+
+        cd ~ 
+        git clone 'https://github.com/greencardamom/BotWikiAwk'
+        export AWKPATH=.:/home/user/BotWikiAwk/lib:/usr/share/awk
+        export PATH=$PATH:/home/user/BotWikiAwk/bin
+        cd ~/BotWikiAwk
+        ./setup.sh
+        read SETUP for further instructions like setting up email
 
 * Clone arcstat to ~/arcstatData on argos
-	cd ~
-	git clone 'https://github.com/greencardamom/Arcstat' arcstatData
+
+        cd ~
+        git clone 'https://github.com/greencardamom/Arcstat' arcstatData
 
 * In VirtualBox (VB) create a shared directory for quepasa and luego, where /media/sf_arcstatData maps to /home/user/arcstatData on argos
 ** For each quepasa and luego in VirtualBox:
-	Settings->Edit->Shared Folders
-		Folder path: /home/user/arcstatData
-		Folder name: arcstatData
-		Checkbox: automount
-		Checkbox: make permanent
+
+        Settings->Edit->Shared Folders
+          Folder path: /home/user/arcstatData
+          Folder name: arcstatData
+          Checkbox: automount
+          Checkbox: make permanent
 
 	In each VM create a directory /home/user/arcstat .. it should contain:
 

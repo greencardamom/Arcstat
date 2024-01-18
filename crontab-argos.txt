@@ -1,1 +1,24 @@
-/home/greenc/arcstatData/crontab-argos.txt
+SHELL=/usr/bin/tcsh
+PATH=/home/greenc:/home/greenc:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/greenc/scripts:/home/greenc/.nimble/bin:/home/greenc/Nim/bin:/home/greenc/BotWikiAwk/bin:/home/greenc/scripts:/home/greenc/.nimble/bin:/home/greenc/Nim/bin:/home/greenc/BotWikiAwk/bin
+MAILTO=stephen@balbach.net
+HOME=/home/greenc
+LANG=en_US.UTF-8
+LANGUAGE=en_US.UTF-8
+LC_COLLATE=en_US.UTF-8
+LC_ALL=en_US.UTF-8
+AWKPATH=.:/home/greenc/BotWikiAwk/lib:/usr/share/awk
+
+#              field          allowed values
+#              -----          --------------
+#              minute         0-59
+#              hour           0-23
+#              day of month   1-31
+#              month          1-12 (or names, see below)
+#              day of week    0-7 (0 or 7 is Sun, or use names)
+#
+
+
+#Min     Hour     Day Of Month     Month     Day of Week     Command / Script
+15       11,22    *                *         *               /home/greenc/toolforge/arcstat/makehtml
+
+30       01       *                *         *               /usr/bin/crontab -l > /home/greenc/toolforge/arcstat/crontab-argos.txt
