@@ -17,16 +17,23 @@ The task strains both CPU and API. It needs at least two VMs. Each VM requires a
 
 The program is entirely MediaWiki API, it can run from any location and computer(s).
 
+Requirements
+============
+* A computer with at least 16 CPU and 16GB RAM. Or multiple computers with a shared a directory.
+* VirtualBox although it is possible to use other VM software, these instructions are for VB.
+* A VPN provider
+* An account on Toolforge (WikiMedia)
+
 Setup
 ==========
 
-I run with the following setup, 2 VMs one one computer:
+I run with the following setup:
 
 * 1 computer with 24 CPU and 32GB RAM (that is 12 core x2 with hyperthread)
 
 * A VPN provider with at least 2 IPs, preferably with gateways nearby Ashburn, VA where MediaWiki hosts. Ask me which. 
 
-* Install 2 VMs in VirtualBox with 4 to 8 CPU and 3 GB RAM each. I prefer Linux Mint (Ubuntu).
+* Install 2 VMs in VirtualBox, allocating 6 to 8 CPU and 3 GB RAM each. I prefer Linux Mint (Ubuntu).
 
 * The host is 'argos' and the VMs are 'quepasa' and 'luego'
 
