@@ -24,7 +24,7 @@ I use this setup:
 
 * A VPN provider with at least 2 IPs, preferably with gateways nearby Ashburn, VA where MediaWiki hosts. Low network latency is key.
 
-* Oracle Virtualbox
+* Oracle VirtualBox
 
         Guest additions
         Networking->Bridged adapter
@@ -45,13 +45,14 @@ I use this setup:
         ./setup.sh
         read SETUP for further instructions like setting up email
 
+* Other software: tcsh (sudo apt-get install tcsh)
+
 * Clone arcstat to ~/arcstatData on argos
 
         cd ~
         git clone 'https://github.com/greencardamom/Arcstat' arcstatData
 
-* In VirtualBox (VB) create a shared directory for quepasa and luego, where /media/sf_arcstatData maps to /home/user/arcstatData on argos
-** For each quepasa and luego in VirtualBox:
+* In VirtualBox (VB) create a shared directory for quepasa and luego, where /media/sf_arcstatData maps to /home/user/arcstatData on argos ie. for each quepasa and luego in VirtualBox:
 
         Settings->Edit->Shared Folders
           Folder path: /home/user/arcstatData
@@ -83,9 +84,11 @@ I use this setup:
 
 	The program push.csh on argos is a tcsh script that is called from makehtml.awk .. it pushes the HTML file to Toolforge using rsync. Login to your toolforge web account and setup your ssh credentials for passwordless login, typically copy the contents of ~/.ssh/id_rsa.pub via the Toolforge web interface.
        
-	Exe["push"] needs to be defined somewhere so makehtml.awk knows where to find push.csh I prefer defining in ~/BotWikiAwk/lib/syscfg.awk but you could also add the definition in makehtml.awk in the BEGIN{} section.
+	Exe["push"] needs to be defined somewhere so makehtml.awk knows where to find push.csh I prefer defining in ~/BotWikiAwk/lib/syscfg.awk but you could also add the definition in makehtml.awk in the BEGIN{} section. For example add this in either place:
 
-	push.csh contains some path-specific information for Toolforge and argos that needs adjustment
+         Exe["push"] = "/home/user/arcstatData/push.csh"
+
+	push.csh contains path-specific information for Toolforge and argos it needs adjustment.
 
 	The files crontab-argos.txt, crontab-quepasa.txt and crontab-luego.txt are the crontabs for each machine. Adjust the paths.
 
@@ -93,10 +96,9 @@ Notes
 =========
 
 * There is also an awk program in the ~/db directory called deletename.awk
-* Most of the programs might contain hard-coded path(s), at the top of the program, typically a path to the Home directory.
-* The program run.awk can start, stop and view running processes on the VMs. But normally processes are started via cron.
-* The file runpage.txt is a list of running processes. If arcstat is killed via "kill <id>" this file is used by run.awk to restart. If restarted, arcstat will pick up where it left off during its long run through every page on-wiki.
-* To add a new site, make sure definearcs.awk is also updated 
+* Most of the programs contain hard-coded path(s), defined at the top of the program, typically a path to the Home directory. Check each and make the changes.
+* The program run.awk can start, stop and view running processes on the VMs. Normally processes are started via cron. 'run -s' shows running processes and progress.
+* The file runpage.txt is a list of running processes. If arcstat is killed via "kill pid" this file is used by run.awk to restart. If restarted, arcstat will pick up where it left off during its long run through every page on-wiki.
 
 Credits
 ==================
