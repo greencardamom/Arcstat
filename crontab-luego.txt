@@ -20,7 +20,7 @@ AWKPATH=.:/home/greenc/BotWikiAwk/lib:/usr/share/awk
 
 #Min     Hour     Day Of Month     Month     Day of Week     Command / Script
 
-30       01       *                *         *               /usr/bin/crontab -l > /home/greenc/sf_arcstatData/crontab-luego.txt
+30       01       *                *         *               /usr/bin/crontab -l > /media/sf_arcstatData/crontab-luego.txt
 
 #
 # arcstat - sorted roughly largest to smallest

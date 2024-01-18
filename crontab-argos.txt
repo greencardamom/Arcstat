@@ -17,8 +17,10 @@ AWKPATH=.:/home/greenc/BotWikiAwk/lib:/usr/share/awk
 #              day of week    0-7 (0 or 7 is Sun, or use names)
 #
 
-
 #Min     Hour     Day Of Month     Month     Day of Week     Command / Script
 15       11,22    *                *         *               /home/greenc/toolforge/arcstat/makehtml
 
 30       01       *                *         *               /usr/bin/crontab -l > /home/greenc/toolforge/arcstat/crontab-argos.txt
+
+# Update GitHub directory via cron due to limitation of symlinks
+40       01       *                *         *               cp /home/greenc/toolforge/arcstat/crontab* /home/greenc/Arcstat

@@ -13,12 +13,14 @@ Arcstat downloads each article on each wiki once a month and counts and sums the
 
 By default it is configured for 60 Wikipedia language-sites, which represents about 80% of Wikipedia by volume eg. as of January 2024, there are about 65 million articles on all Wikipedias, and these 60 sites contain about 50 million articles, or 80% of the total.
 
-The task strains both CPU and API. It must be running on at least two VMs. Each VM also needs a VPN, with its own IP number. 
+The task strains both CPU and API. It must use at least two VMs. Each VM also requires a VPN, with its own IP number. 
+
+The program is entirely MediaWiki API, it can run from any location/computer, there is no SQL.
 
 Setup
 ==========
 
-I use the following setup with 2 VPNs:
+I use the following setup with 2 VMs:
 
 * 1 computer with 24 CPU and 32GB RAM (that is 12 core x2 with hyperthread)
 
@@ -96,13 +98,15 @@ How it works
 =========
 Once a month, for a given wiki, arcstat.awk downloads a list of all article titles currently in existence. It goes through this list downloading the page and counting the number of links. The stats are saved to a cache file so future runs of arcstat "remember" the stats in case the page has not changed since the last run, it is more efficient. When complete, the total results are summed and saved to ~/db/master.db which is 1 line per 1 run (month) of arcstat. Once a day or so, makehtml.awk takes as input master.db and formats the HTML page and uploads the results to Toolforge via push.csh
 
+The program is designed to fail well. If the process is killed or the computer reboots, it will pick up where it left off. Because it can take weeks to complete longer wikis, this is essential versus starting from the beginning.
+
 Notes
 =========
 
 * There is also an awk program in the ~/db directory called deletename.awk
 * Most of the programs contain hard-coded path(s), defined at the top of the program, typically a path to the Home directory. Check each and make the changes.
 * The program run.awk can start, stop and view running processes on the VMs. Normally processes are started via cron. 'run -s' shows running processes and progress.
-* The file runpage.txt is a list of running processes. If arcstat is killed via "kill pid" this file is used by run.awk to restart. If restarted, arcstat will pick up where it left off during its long run through every page on-wiki.
+* The file runpage.txt is a list of running processes. If arcstat stops this file is used by run.awk to restart. If restarted, arcstat will pick up where it left off during its long run through every page on-wiki.
 
 Credits
 ==================
