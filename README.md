@@ -98,7 +98,11 @@ I run with the following setup:
 
 	push.csh contains path-specific information for Toolforge and argos, it will require adjustment.
 
-* Most of the programs contain hard-coded path(s), defined at the top of the program, typically to the Home directory. Check each to make the changes.
+* Most of the programs contain hard-coded path(s), defined at the top of the program, typically for the Home directory. Check each .awk and .csh file
+
+        There are hard coded paths in the hash-bang first line of each program, for awk and tcsh .. adjust these or make symlinks
+        There are hard coded paths in some @include statements in arcstat.awk and makehtml.awk .. adjust these
+        There are hard coded paths in ~/db/deletename.awk for external program paths .. adjust these
 
 * Startup the crontabs for each machine. First modify the paths in the crontab-*.txt files. For example while logged into luego run:
 
