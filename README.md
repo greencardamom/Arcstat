@@ -13,16 +13,16 @@ Arcstat downloads each article on each wiki once a month and counts and sums the
 
 By default it is configured for 60 Wikipedia language-sites, which represents about 80% of Wikipedia by volume eg. as of January 2024, there are about 65 million articles on all Wikipedias, and these 60 sites contain about 50 million articles, or 80% of the total.
 
-The task must be broken into at least two VMs. Each VM also uses a VPN, with its own IP number. 
+The task strains both CPU and API. It must be running on at least two VMs. Each VM also needs a VPN, with its own IP number. 
 
 Setup
 ==========
 
-I use this setup:
+I use the following setup with 2 VPNs:
 
 * 1 computer with 24 CPU and 32GB RAM (that is 12 core x2 with hyperthread)
 
-* A VPN provider with at least 2 IPs, preferably with gateways nearby Ashburn, VA where MediaWiki hosts. Low network latency is key.
+* A VPN provider with at least 2 IPs, preferably it has gateways nearby Ashburn, VA where MediaWiki hosts. Ask me which one. 
 
 * Oracle VirtualBox
 
