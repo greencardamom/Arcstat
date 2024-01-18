@@ -26,6 +26,6 @@ cp --preserve=all /home/greenc/arcstatData/table1header.html /home/greenc/Arcsta
 cp --preserve=all /home/greenc/arcstatData/table2header.html /home/greenc/Arcstat
 cp --preserve=all /home/greenc/arcstatData/templateNames.txt /home/greenc/Arcstat
 cp --preserve=all /home/greenc/arcstatData/trans.awk /home/greenc/Arcstat
-cp --preserve=all /home/greenc/arcstatData/www/sorttable.js /home/greenc/Arcstat
-cp --preserve=all /home/greenc/arcstatData/www/sweetalert.min.js /home/greenc/Arcstat
+cp --preserve=all /home/greenc/arcstatData/www/sorttable.js /home/greenc/Arcstat/www
+cp --preserve=all /home/greenc/arcstatData/www/sweetalert.min.js /home/greenc/Arcstat/www
 
