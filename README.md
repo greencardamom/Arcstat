@@ -1,6 +1,6 @@
 Arcstat
 ===========
-Arcstat creates statistics of archive URL usage on Wikipedia:
+Arcstat creates a table showing the number of archive URLs currently on Wikipedia, seen here:
 
 * https://tools-static.wmflabs.org/botwikiawk/dashboard.html
 
@@ -30,7 +30,7 @@ I run with the following setup, 2 VMs one one computer:
 
 * The host is 'argos' and the VMs are 'quepasa' and 'luego'
 
-* VirtualBox setup:
+* VirtualBox setup for the guests:
 
         Guest additions
         Networking->Bridged adapter
