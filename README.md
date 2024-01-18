@@ -9,11 +9,11 @@ The product is "Dashboard Classic" and the program is "Arcstat".
 Overview
 ==========
 
-Arcstat downloads each article once a month and counts and sums the number of archive URLs. It does an API check to see if the page has been edited since the last check, if not it doesn't download, since no change happened it uses the stats from last month.
+Arcstat downloads each article on each wiki once a month and counts and sums the number of archive URLs. 
 
-By default it is configured for 60 Wikipedia language-sites which represents about 80% of Wikipedia by volume eg. there are about 65 million articles on all Wikipedias, and these 60 sites contain about 50 million articles, or 80% of all the articles.
+By default it is configured for 60 Wikipedia language-sites, which represents about 80% of Wikipedia by volume eg. as of January 2024, there are about 65 million articles on all Wikipedias, and these 60 sites contain about 50 million articles, or 80% of the total.
 
-The task must be broken into at least two VMs. Each VM uses a VPN with its own IP number. 
+The task must be broken into at least two VMs. Each VM also uses a VPN, with its own IP number. 
 
 Setup
 ==========
