@@ -1,6 +1,5 @@
 SHELL=/usr/bin/tcsh
 PATH=/home/greenc:/home/greenc:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/greenc/scripts:/home/greenc/.nimble/bin:/home/greenc/Nim/bin:/home/greenc/BotWikiAwk/bin:/home/greenc/scripts:/home/greenc/.nimble/bin:/home/greenc/Nim/bin:/home/greenc/BotWikiAwk/bin
-MAILTO=stephen@balbach.net
 HOME=/home/greenc
 LANG=en_US.UTF-8
 LANGUAGE=en_US.UTF-8
@@ -17,143 +16,145 @@ AWKPATH=.:/home/greenc/BotWikiAwk/lib:/usr/share/awk
 #              day of week    0-7 (0 or 7 is Sun, or use names)
 #
 
+
 #Min     Hour     Day Of Month     Month     Day of Week     Command / Script
 
-30       01       *                *         *                /usr/bin/crontab -l > /media/sf_arcstatData/crontab-quepasa.txt
+# Save crontab
+30       01       *                *         *               /usr/bin/crontab -l > /media/sf_arcstatData/crontab-quepasa.txt
 
 #
-# arcstat - sorted roughly largest to smallest
-#  Delete cache every 3rd month to monitor data cache for patterns that suggest underlying problem eg. large jump in numbers every third month etc..
+# arcstat - sorted roughly largest site to smallest
+#  Delete cache regularly to clear out any problems that might accumulate
 #
 #  enwiki
-#28 1 1 2,5,8,11 * /bin/rm /home/greenc/toolforge/arcstat/db/en.wikipedia.*
-#38 1 1 * * /home/greenc/toolforge/arcstat/arcstat.awk -h en -d wikipedia.org
+#28 1 1 7 * /bin/rm /home/greenc/toolforge/arcstat/db/en.wikipedia.*
+#38 1 1 1,4,7,10 * /home/greenc/toolforge/arcstat/arcstat.awk -h en -d wikipedia.org
 #
 #  dewiki
-28 1 7 1,4,7,10 * /bin/rm /home/greenc/toolforge/arcstat/db/de.wikipedia.*
-38 1 7 * * /home/greenc/toolforge/arcstat/arcstat.awk -h de -d wikipedia.org
+28 1 7 7 * /bin/rm /home/greenc/toolforge/arcstat/db/de.wikipedia.*
+38 1 7 1,4,7,10 * /home/greenc/toolforge/arcstat/arcstat.awk -h de -d wikipedia.org
 #
 #  warwiki
-#28 1 10 3,6,9,12 * /bin/rm /home/greenc/toolforge/arcstat/db/war.wikipedia.*
-#38 1 10 * * /home/greenc/toolforge/arcstat/arcstat.awk -h war -d wikipedia.org
+#28 1 10 2 * /bin/rm /home/greenc/toolforge/arcstat/db/war.wikipedia.*
+#38 1 10 2,5,8,11 * /home/greenc/toolforge/arcstat/arcstat.awk -h war -d wikipedia.org
 #
 #  svwiki
-28 1 14 2,5,8,11 * /bin/rm /home/greenc/toolforge/arcstat/db/sv.wikipedia.*
-38 1 14 * * /home/greenc/toolforge/arcstat/arcstat.awk -h sv -d wikipedia.org
+28 1 14 2 * /bin/rm /home/greenc/toolforge/arcstat/db/sv.wikipedia.*
+38 1 14 2,5,8,11 * /home/greenc/toolforge/arcstat/arcstat.awk -h sv -d wikipedia.org
 #
 #  arwiki
-#28 1 17 1,4,7,10 * /bin/rm /home/greenc/toolforge/arcstat/db/ar.wikipedia.*
-#38 1 17 * * /home/greenc/toolforge/arcstat/arcstat.awk -h ar -d wikipedia.org
+#28 1 17 6 * /bin/rm /home/greenc/toolforge/arcstat/db/ar.wikipedia.*
+#38 1 17 3,6,9,12 * /home/greenc/toolforge/arcstat/arcstat.awk -h ar -d wikipedia.org
 #
 #  cebwiki
-28 1 19 2,5,8,11 * /bin/rm /home/greenc/toolforge/arcstat/db/ceb.wikipedia.*
-38 1 19 * * /home/greenc/toolforge/arcstat/arcstat.awk -h ceb -d wikipedia.org
+28 1 19 6 * /bin/rm /home/greenc/toolforge/arcstat/db/ceb.wikipedia.*
+38 1 19 3,6,9,12 * /home/greenc/toolforge/arcstat/arcstat.awk -h ceb -d wikipedia.org
 #
 #  nlwiki
-#28 1 21 3,6,9,12 * /bin/rm /home/greenc/toolforge/arcstat/db/nl.wikipedia.*
-#38 1 21 * * /home/greenc/toolforge/arcstat/arcstat.awk -h nl -d wikipedia.org
+#28 1 21 4 * /bin/rm /home/greenc/toolforge/arcstat/db/nl.wikipedia.*
+#38 1 21 1,4,7,10 * /home/greenc/toolforge/arcstat/arcstat.awk -h nl -d wikipedia.org
 #
 #  arzwiki
-28 1 24 1,4,7,10 * /bin/rm /home/greenc/toolforge/arcstat/db/arz.wikipedia.*
-38 1 24 * * /home/greenc/toolforge/arcstat/arcstat.awk -h arz -d wikipedia.org
+28 1 24 4 * /bin/rm /home/greenc/toolforge/arcstat/db/arz.wikipedia.*
+38 1 24 1,4,7,10 * /home/greenc/toolforge/arcstat/arcstat.awk -h arz -d wikipedia.org
 #
 #  viwiki
-#28 1 27 2,5,8,11 * /bin/rm /home/greenc/toolforge/arcstat/db/vi.wikipedia.*
-#38 1 27 * * /home/greenc/toolforge/arcstat/arcstat.awk -h vi -d wikipedia.org
+#28 1 27 8 * /bin/rm /home/greenc/toolforge/arcstat/db/vi.wikipedia.*
+#38 1 27 2,5,8,11 * /home/greenc/toolforge/arcstat/arcstat.awk -h vi -d wikipedia.org
 #
 # ---
 #
 #  ruwiki
-28 1 4 2,5,8,11 * /bin/rm /home/greenc/toolforge/arcstat/db/ru.wikipedia.*
-38 1 4 * * /home/greenc/toolforge/arcstat/arcstat.awk -h ru -d wikipedia.org
+28 1 4 1,7 * /bin/rm /home/greenc/toolforge/arcstat/db/ru.wikipedia.*
+38 1 4 1,3,5,7,9,11 * /home/greenc/toolforge/arcstat/arcstat.awk -h ru -d wikipedia.org
 #
 #  elwiki
-#28 1 5 1,4,7,10 * /bin/rm /home/greenc/toolforge/arcstat/db/el.wikipedia.*
-#38 1 5 * * /home/greenc/toolforge/arcstat/arcstat.awk -h el -d wikipedia.org
+#28 1 5 1,7 * /bin/rm /home/greenc/toolforge/arcstat/db/el.wikipedia.*
+#38 1 5 1,3,5,7,9,11 * /home/greenc/toolforge/arcstat/arcstat.awk -h el -d wikipedia.org
 #
 #  zhwiki
-28 1 6 3,6,9,12 * /bin/rm /home/greenc/toolforge/arcstat/db/zh.wikipedia.*
-38 1 6 * * /home/greenc/toolforge/arcstat/arcstat.awk -h zh -d wikipedia.org
+28 1 6 4,10 * /bin/rm /home/greenc/toolforge/arcstat/db/zh.wikipedia.*
+38 1 6 2,4,6,8,10,12 * /home/greenc/toolforge/arcstat/arcstat.awk -h zh -d wikipedia.org
 #
 #  simple
-#28 1 7 2,5,8,11 * /bin/rm /home/greenc/toolforge/arcstat/db/simple.wikipedia.*
-#38 1 7 * * /home/greenc/toolforge/arcstat/arcstat.awk -h simple -d wikipedia.org
+#28 1 7 4,10 * /bin/rm /home/greenc/toolforge/arcstat/db/simple.wikipedia.*
+#38 1 7 2,4,6,8,10,12 * /home/greenc/toolforge/arcstat/arcstat.awk -h simple -d wikipedia.org
 #
 #  nowiki
-28 1 8 1,4,7,10 * /bin/rm /home/greenc/toolforge/arcstat/db/no.wikipedia.*
-38 1 8 * * /home/greenc/toolforge/arcstat/arcstat.awk -h no -d wikipedia.org
+28 1 8 1,7 * /bin/rm /home/greenc/toolforge/arcstat/db/no.wikipedia.*
+38 1 8 1,3,5,7,9,11 * /home/greenc/toolforge/arcstat/arcstat.awk -h no -d wikipedia.org
 #
 #  eswiki
-#28 1 9 3,6,9,12 * /bin/rm /home/greenc/toolforge/arcstat/db/es.wikipedia.*
-#38 1 9 * * /home/greenc/toolforge/arcstat/arcstat.awk -h es -d wikipedia.org
+#28 1 9 1,7 * /bin/rm /home/greenc/toolforge/arcstat/db/es.wikipedia.*
+#38 1 9 1,3,5,7,9,11 * /home/greenc/toolforge/arcstat/arcstat.awk -h es -d wikipedia.org
 #
 #  kawiki
-28 1 10 2,5,8,11 * /bin/rm /home/greenc/toolforge/arcstat/db/ka.wikipedia.*
-38 1 10 * * /home/greenc/toolforge/arcstat/arcstat.awk -h ka -d wikipedia.org
+28 1 10 4,10 * /bin/rm /home/greenc/toolforge/arcstat/db/ka.wikipedia.*
+38 1 10 2,4,6,8,10,12 * /home/greenc/toolforge/arcstat/arcstat.awk -h ka -d wikipedia.org
 #
 #  ukwiki
-#28 1 11 1,4,7,10 * /bin/rm /home/greenc/toolforge/arcstat/db/uk.wikipedia.*
-#38 1 11 * * /home/greenc/toolforge/arcstat/arcstat.awk -h uk -d wikipedia.org
+#28 1 11 4,10 * /bin/rm /home/greenc/toolforge/arcstat/db/uk.wikipedia.*
+#38 1 11 2,4,6,8,10,12 * /home/greenc/toolforge/arcstat/arcstat.awk -h uk -d wikipedia.org
 #
 #  urwiki
-28 1 12 3,6,9,12 * /bin/rm /home/greenc/toolforge/arcstat/db/ur.wikipedia.*
-38 1 12 * * /home/greenc/toolforge/arcstat/arcstat.awk -h ur -d wikipedia.org
+28 1 12 1,7 * /bin/rm /home/greenc/toolforge/arcstat/db/ur.wikipedia.*
+38 1 12 1,3,5,7,9,11 * /home/greenc/toolforge/arcstat/arcstat.awk -h ur -d wikipedia.org
 #
 #  kowiki
-#28 1 13 2,5,8,11 * /bin/rm /home/greenc/toolforge/arcstat/db/ko.wikipedia.*
-#38 1 13 * * /home/greenc/toolforge/arcstat/arcstat.awk -h ko -d wikipedia.org
+#28 1 13 1,7 * /bin/rm /home/greenc/toolforge/arcstat/db/ko.wikipedia.*
+#38 1 13 1,3,5,7,9,11 * /home/greenc/toolforge/arcstat/arcstat.awk -h ko -d wikipedia.org
 #
 #  hywiki
-28 1 14 1,4,7,10 * /bin/rm /home/greenc/toolforge/arcstat/db/hy.wikipedia.*
-38 1 14 * * /home/greenc/toolforge/arcstat/arcstat.awk -h hy -d wikipedia.org
+28 1 14 4,10 * /bin/rm /home/greenc/toolforge/arcstat/db/hy.wikipedia.*
+38 1 14 2,4,6,8,10,12 * /home/greenc/toolforge/arcstat/arcstat.awk -h hy -d wikipedia.org
 #
 #  azbwiki
-#28 1 15 2,5,8,11 * /bin/rm /home/greenc/toolforge/arcstat/db/azb.wikipedia.*
-#38 1 15 * * /home/greenc/toolforge/arcstat/arcstat.awk -h azb -d wikipedia.org
+#28 1 15 4,10 * /bin/rm /home/greenc/toolforge/arcstat/db/azb.wikipedia.*
+#38 1 15 2,4,6,8,10,12 * /home/greenc/toolforge/arcstat/arcstat.awk -h azb -d wikipedia.org
 #
 #  itwiki
-28 1 16 3,6,9,12 * /bin/rm /home/greenc/toolforge/arcstat/db/it.wikipedia.*
-38 1 16 * * /home/greenc/toolforge/arcstat/arcstat.awk -h it -d wikipedia.org
+28 1 16 1,7 * /bin/rm /home/greenc/toolforge/arcstat/db/it.wikipedia.*
+38 1 16 1,3,5,7,9,11 * /home/greenc/toolforge/arcstat/arcstat.awk -h it -d wikipedia.org
 #
 #  plwiki
-#28 1 17 2,5,8,11 * /bin/rm /home/greenc/toolforge/arcstat/db/pl.wikipedia.*
-#38 1 17 * * /home/greenc/toolforge/arcstat/arcstat.awk -h pl -d wikipedia.org
+#28 1 17 1,7 * /bin/rm /home/greenc/toolforge/arcstat/db/pl.wikipedia.*
+#38 1 17 1,3,5,7,9,11 * /home/greenc/toolforge/arcstat/arcstat.awk -h pl -d wikipedia.org
 #
 #  specieswikimedia
-28 1 18 2,5,8,11 * /bin/rm /home/greenc/toolforge/arcstat/db/species.wikimedia.*
-38 1 18 * * /home/greenc/toolforge/arcstat/arcstat.awk -h species -d wikimedia.org
+28 1 18 4,10 * /bin/rm /home/greenc/toolforge/arcstat/db/species.wikimedia.*
+38 1 18 2,4,6,8,10,12 * /home/greenc/toolforge/arcstat/arcstat.awk -h species -d wikimedia.org
 #
 #  trwiki
-#28 1 19 1,4,7,10 * /bin/rm /home/greenc/toolforge/arcstat/db/tr.wikipedia.*
-#38 1 19 * * /home/greenc/toolforge/arcstat/arcstat.awk -h tr -d wikipedia.org
+#28 1 19 4,10 * /bin/rm /home/greenc/toolforge/arcstat/db/tr.wikipedia.*
+#38 1 19 2,4,6,8,10,12 * /home/greenc/toolforge/arcstat/arcstat.awk -h tr -d wikipedia.org
 #
 #  huwiki
-28 1 20 3,6,9,12 * /bin/rm /home/greenc/toolforge/arcstat/db/hu.wikipedia.*
-38 1 20 * * /home/greenc/toolforge/arcstat/arcstat.awk -h hu -d wikipedia.org
+28 1 20 1,7 * /bin/rm /home/greenc/toolforge/arcstat/db/hu.wikipedia.*
+38 1 20 1,3,5,7,9,11 * /home/greenc/toolforge/arcstat/arcstat.awk -h hu -d wikipedia.org
 #
 #  fiwiki
-#28 1 21 2,5,8,11 * /bin/rm /home/greenc/toolforge/arcstat/db/fi.wikipedia.*
-#38 1 21 * * /home/greenc/toolforge/arcstat/arcstat.awk -h fi -d wikipedia.org
+28 1 21 1,7 * /bin/rm /home/greenc/toolforge/arcstat/db/fi.wikipedia.*
+38 1 21 1,3,5,7,9,11 * /home/greenc/toolforge/arcstat/arcstat.awk -h fi -d wikipedia.org
 #
 #  azwiki
-28 1 22 2,5,8,11 * /bin/rm /home/greenc/toolforge/arcstat/db/az.wikipedia.*
-38 1 22 * * /home/greenc/toolforge/arcstat/arcstat.awk -h az -d wikipedia.org
+28 1 22 4,10 * /bin/rm /home/greenc/toolforge/arcstat/db/az.wikipedia.*
+38 1 22 2,4,6,8,10,12 * /home/greenc/toolforge/arcstat/arcstat.awk -h az -d wikipedia.org
 #
 #  ptwiki
-#28 1 23 1,4,7,10 * /bin/rm /home/greenc/toolforge/arcstat/db/pt.wikipedia.*
-#38 1 23 * * /home/greenc/toolforge/arcstat/arcstat.awk -h pt -d wikipedia.org
+#28 1 23 4,10 * /bin/rm /home/greenc/toolforge/arcstat/db/pt.wikipedia.*
+#38 1 23 2,4,6,8,10,12 * /home/greenc/toolforge/arcstat/arcstat.awk -h pt -d wikipedia.org
 #
 #  srwiki
-28 1 25 3,6,9,12 * /bin/rm /home/greenc/toolforge/arcstat/db/sr.wikipedia.*
-38 1 25 * * /home/greenc/toolforge/arcstat/arcstat.awk -h sr -d wikipedia.org
+28 1 25 1,7 * /bin/rm /home/greenc/toolforge/arcstat/db/sr.wikipedia.*
+38 1 25 1,3,5,7,9,11 * /home/greenc/toolforge/arcstat/arcstat.awk -h sr -d wikipedia.org
 #
 #  bewiki
-#28 1 27 2,5,8,11 * /bin/rm /home/greenc/toolforge/arcstat/db/be.wikipedia.*
-#38 1 27 * * /home/greenc/toolforge/arcstat/arcstat.awk -h be -d wikipedia.org
+#28 1 27 1,7 * /bin/rm /home/greenc/toolforge/arcstat/db/be.wikipedia.*
+#38 1 27 1,3,5,7,9,11 * /home/greenc/toolforge/arcstat/arcstat.awk -h be -d wikipedia.org
 #
 #  idwiki
-28 1 29 2,5,8,11 * /bin/rm /home/greenc/toolforge/arcstat/db/id.wikipedia.*
-38 1 29 * * /home/greenc/toolforge/arcstat/arcstat.awk -h id -d wikipedia.org
+28 1 29 4,10 * /bin/rm /home/greenc/toolforge/arcstat/db/id.wikipedia.*
+38 1 29 2,4,6,8,10,12 * /home/greenc/toolforge/arcstat/arcstat.awk -h id -d wikipedia.org
 #
 # ----
 #
@@ -230,8 +231,8 @@ AWKPATH=.:/home/greenc/BotWikiAwk/lib:/usr/share/awk
 38 1 18 * * /home/greenc/toolforge/arcstat/arcstat.awk -h fa -d wikipedia.org
 #
 #  euwiki
-#29 1 18 1,4,7,10 * /bin/rm /home/greenc/toolforge/arcstat/db/eu.wikipedia.*
-#39 1 18 * * /home/greenc/toolforge/arcstat/arcstat.awk -h eu -d wikipedia.org
+#28 1 18 1,4,7,10 * /bin/rm /home/greenc/toolforge/arcstat/db/eu.wikipedia.*
+#38 1 18 * * /home/greenc/toolforge/arcstat/arcstat.awk -h eu -d wikipedia.org
 #
 #  dawiki
 28 1 20 3,6,9,12 * /bin/rm /home/greenc/toolforge/arcstat/db/da.wikipedia.*
@@ -297,4 +298,3 @@ AWKPATH=.:/home/greenc/BotWikiAwk/lib:/usr/share/awk
 #  frwiktionary
 #38 1 30 3,6,9,12 * /home/greenc/toolforge/arcstat/arcstat.awk -h fr -d wiktionary.org
 #
-

@@ -31,14 +31,14 @@
 BEGIN { # Bot cfg
 
   _defaults = "home      = /home/greenc/toolforge/arcstat/ \
-               email     = dfgf56greencard93@nym.hush.com \
+               email     = User:GreenC on en.wikipedia.org \
                version   = 1.0 \
                copyright = 2024"
 
   asplit(G, _defaults, "[ ]*[=][ ]*", "[ ]{9,}")
   BotName = "arcstat"
   Home = G["home"]
-  Agent = "Ask me about " BotName " - " G["email"]
+  Agent = "Ask me about " BotName " @ " G["email"]
   Engine = 3
 
   IGNORECASE = 1

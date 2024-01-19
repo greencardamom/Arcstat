@@ -1,6 +1,5 @@
 SHELL=/usr/bin/tcsh
 PATH=/home/greenc:/home/greenc:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/greenc/scripts:/home/greenc/.nimble/bin:/home/greenc/Nim/bin:/home/greenc/BotWikiAwk/bin:/home/greenc/scripts:/home/greenc/.nimble/bin:/home/greenc/Nim/bin:/home/greenc/BotWikiAwk/bin
-MAILTO=stephen@balbach.net
 HOME=/home/greenc
 LANG=en_US.UTF-8
 LANGUAGE=en_US.UTF-8
@@ -18,9 +17,13 @@ AWKPATH=.:/home/greenc/BotWikiAwk/lib:/usr/share/awk
 #
 
 #Min     Hour     Day Of Month     Month     Day of Week     Command / Script
+
+# make arcstat HTML and push to Toolforge
 15       11,22    *                *         *               /home/greenc/toolforge/arcstat/makehtml
 
+# Save crontab
 30       01       *                *         *               /usr/bin/crontab -l > /home/greenc/toolforge/arcstat/crontab-argos.txt
 
-# Update GitHub directory via cron due to limitation of symlinks
-40       01       *                *         *               cp /home/greenc/toolforge/arcstat/crontab* /home/greenc/Arcstat
+# Update GitHub directory via cron due to limitations of git, symlinks and VirtualBox - see file for explanation
+40       01       *                *         *               /home/greenc/arcstatData/gitupdate.sh
+

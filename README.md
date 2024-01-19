@@ -62,6 +62,9 @@ I run with the following setup:
          lrwxrwxrwx 1 user user    11 Jan 10 16:39 arcstat -> arcstat.awk
          lrwxrwxrwx 1 user user    33 Jan 13 13:01 arcstat.awk -> /media/sf_arcstatData/arcstat.awk
          lrwxrwxrwx 1 user user    24 Jan 10 16:38 db -> /media/sf_arcstatData/db
+         lrwxrwxrwx 1 user user    24 Jan 10 16:38 crontab-argos.txt -> /media/sf_arcstatData/crontab-argos.txt
+         lrwxrwxrwx 1 user user    24 Jan 10 16:38 crontab-luego.txt -> /media/sf_arcstatData/crontab-luego.txt
+         lrwxrwxrwx 1 user user    24 Jan 10 16:38 crontab-quepasa.txt -> /media/sf_arcstatData/crontab-quepasa.txt
          lrwxrwxrwx 1 user user    36 Jan 13 13:45 definearcs.awk -> /media/sf_arcstatData/definearcs.awk
          lrwxrwxrwx 1 user user    33 Jan 13 13:45 footer.html -> /media/sf_arcstatData/footer.html
          lrwxrwxrwx 1 user user    33 Jan 13 13:45 header.html -> /media/sf_arcstatData/header.html
