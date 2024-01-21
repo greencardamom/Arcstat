@@ -27,3 +27,6 @@ AWKPATH=.:/home/greenc/BotWikiAwk/lib:/usr/share/awk
 # Update GitHub directory via cron due to limitations of git, symlinks and VirtualBox - see file for explanation
 40       01       *                *         *               /home/greenc/arcstatData/gitupdate.sh
 
+# Make a backup copty of master.db in ~/www where it gets uploaded by push.csh to Toolforge for off-site backup
+41       01       *                *         *               /usr/bin/cp /home/greenc/arcstatData/db/master.db /home/greenc/arcstatData/www
+

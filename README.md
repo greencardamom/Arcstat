@@ -9,17 +9,17 @@ The product is "Dashboard Classic" and the program is "Arcstat".
 Overview
 ==========
 
-Arcstat downloads each article on each wiki once a month and counts and sums the number of archive URLs. 
+Arcstat downloads each article on each wiki about once a month, counts and sums the number of archive URLs, and generates the HTML table.
 
 By default it is configured for 60 Wikipedia language-sites, which represents about 80% of Wikipedia by volume eg. as of January 2024, there are about 65 million articles on all Wikipedias, and these 60 sites contain about 50 million articles, or 80% of the total.
 
 The task strains both CPU and API. It needs at least two VMs. Each VM requires a VPN with its own IP number. 
 
-The program is entirely MediaWiki API, it can run from any location and computer(s).
+The program is entirely MediaWiki API based, it can thus run from any location and computer(s).
 
 Requirements
 ============
-* A computer with at least 16 CPU and 16GB RAM. Or multiple computers with a shared a directory.
+* A computer with at least 16 CPU and 32GB RAM. Or multiple computers with a shared a directory.
 * VirtualBox although it is possible to use other VM software, these instructions are for VB.
 * A VPN provider
 * An account on Toolforge (WikiMedia)
@@ -29,11 +29,11 @@ Setup
 
 I run with the following setup:
 
-* 1 computer with 24 CPU and 32GB RAM (that is 12 core x2 with hyperthread)
+* 1 computer with 16 CPU and 64GB RAM (that is 8 core x2 with hyperthread, and 8 core standalone)
 
 * A VPN provider with at least 2 IPs, preferably with gateways nearby Ashburn, VA where MediaWiki hosts. Ask me which. 
 
-* Install 2 VMs in VirtualBox, allocating 6 to 8 CPU and 3 GB RAM each. I prefer Linux Mint (Ubuntu).
+* Install 2 VMs in VirtualBox, allocating each 5 CPU and 3 GB RAM. I prefer Linux Mint (Ubuntu).
 
 * The host is 'argos' and the VMs are 'quepasa' and 'luego'
 
@@ -114,9 +114,11 @@ I run with the following setup:
 
 How it works
 =========
-Once a month, for a given wiki, arcstat.awk downloads a list of all article titles that are currently in existence. It iterates through this list downloading the page, parsing, counting and summing the number of links. The stats are saved to a cache file, so future runs of arcstat remember the stats - in case the page is unchanged since the last run, it doesn't need to download and parse it again. When complete, the total results are summed and saved to ~/db/master.db which is 1 line for 1 run (month) for 1 wiki site. Once a day or so, makehtml.awk takes as input master.db and formats the HTML page and uploads the results to Toolforge, via push.csh
+About once a month, for a given wiki, arcstat.awk downloads a list of all article titles that are currently in existence. It iterates through this list downloading the page, parsing, counting and summing the number of links. The stats are saved to a cache file, so future runs of arcstat remember the stats - in case the page is unchanged since the last run, it doesn't need to download and parse it again. When complete, the total results are summed and saved to ~/db/master.db which is 1 line for 1 run (month) for 1 wiki site. Once a day or so, makehtml.awk takes as input master.db and formats the HTML page and uploads the results to Toolforge, via push.csh
 
 The program is designed to fail well. If the process is killed or the computer reboots, it will pick up where it left off. Because it can take weeks to complete large wikis it is essential, versus starting from the beginning.
+
+If computing resources are limited, arcstat can be configured to run less frequently than monthly.
 
 Notes
 =========
