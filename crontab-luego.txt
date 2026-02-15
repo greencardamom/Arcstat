@@ -28,7 +28,7 @@ AWKPATH=.:/home/greenc/BotWikiAwk/lib:/usr/share/awk
 #
 #  enwiki
 28 1 1 7 * /bin/rm /home/greenc/toolforge/arcstat/db/en.wikipedia.*
-38 1 1 1,4,7,10 * /home/greenc/toolforge/arcstat/arcstat.awk -h en -d wikipedia.org
+38 1 1 2,5,7,11 * /home/greenc/toolforge/arcstat/arcstat.awk -h en -d wikipedia.org
 #
 #  dewiki
 #28 1 7 7 * /bin/rm /home/greenc/toolforge/arcstat/db/de.wikipedia.*

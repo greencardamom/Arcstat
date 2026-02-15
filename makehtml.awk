@@ -314,7 +314,7 @@ function makePage( i,k) {
 
   print "<br>" >> P["html"]
   # print "<p>Methods and assumptions: download each article and count number of archives therein. It can not differentiate who added the link (bot or person). Thus the \"origin date\" - when IABot first stated running on a wiki - is to help estimate the total number of links added by IABot by subtracting number of links that existed prior to IABot's origin. For example E-total minus O-total = \"Total Wayback links added since origin\" (in box below). Of this number, some additional % was added by editors manually during IAbots lifetime, estimate 50%. Thus \"Total links added by IABot\" represents \"Total links added since IABot origin\" minus 50%.</p>" >> P["html"]
-  print "<p>Method: once a month, download each Wikipedia article, count the number of archive URLs therein, sum the totals. It can not differentiate who added the link (bot or person).</p>" >> P["html"]
+  print "<p>Method: once a month, download each Wikipedia article, count the number of archive URLs therein, sum the totals. It does not differentiate who added the link (bot or person).</p>" >> P["html"]
   print "<br>" >> P["html"]
 
   print "<table id=\"summary\">" >> P["html"]
@@ -355,13 +355,15 @@ function makePage( i,k) {
 
     #    <th><u>#</u></th>
     #    <th><u>A</u><br>Site</th>
-    #    <th><u>B</u><br>Last stats update</th>
-    #    <th><u>C</u><br>Mediatype texts</th>
-    #    <th><u>D</u><br>Mediatype audio</th>
-    #    <th><u>E</u><br>Mediatype movies</th>
-    #    <th><u>F</u><br>Mediatype other</th>
-    #    <th><u>G</u><br>texts with page#</th>
-    #    <th><u>H</u><br>Google Books</th>
+    #    <th><u>B</u><br>Site plain</th>
+    #    <th><u>C</u><br>Last stats update</th>
+    #    <th><u>D</u><br>Mediatype texts</th>
+    #    <th><u>E</u><br>Mediatype audio</th>
+    #    <th><u>F</u><br>Mediatype movies</th>
+    #    <th><u>G</u><br>Mediatype other</th>
+    #    <th><u>H</u><br>Mediatype dark</th>
+    #    <th><u>I</u><br>texts with page#</th>
+    #    <th><u>J</u><br>Google Books</th>
 
     print "  <tr>" >> P["html"]
     print "      <td>" ++i ".</td>" >> P["html"]
@@ -372,6 +374,7 @@ function makePage( i,k) {
     print "      <td>" coma(RO[k]["iaaudio"]) "</td>" >> P["html"]
     print "      <td>" coma(RO[k]["iamovies"]) "</td>" >> P["html"]
     print "      <td>" coma(RO[k]["iaother"]) "</td>" >> P["html"]
+    print "      <td>" coma(RO[k]["iadark"]) "</td>" >> P["html"]
     print "      <td>" coma(RO[k]["iapagen"]) "</td>" >> P["html"]
     print "      <td>" coma(RO[k]["gbhits"]) "</td>" >> P["html"]
     print "  </tr>" >> P["html"]
@@ -391,6 +394,7 @@ function makePage( i,k) {
   print "      <td>" coma(TO["iaaudio"]) "</td>" >> P["html"]    # 
   print "      <td>" coma(TO["iamovies"]) "</td>" >> P["html"]   # 
   print "      <td>" coma(TO["iaother"]) "</td>" >> P["html"]    # 
+  print "      <td>" coma(TO["iadark"]) "</td>" >> P["html"]    # 
   print "      <td>" coma(TO["iapagen"]) "</td>" >> P["html"]    # 
   print "      <td>" coma(TO["gbhits"]) "</td>" >> P["html"]     # 
   print "  </tr>"  >> P["html"]
@@ -451,6 +455,7 @@ function makeArrays(  i,a,b,d,j,k) {
             R[b[1]]["iaimage"] = d[13]
             R[b[1]]["iaother"] = d[14]
             R[b[1]]["iapagen"] = d[15]
+            R[b[1]]["iadark"] = d[16]
           }
         }
       }
@@ -618,14 +623,21 @@ function makeArrays(  i,a,b,d,j,k) {
         T["iaother"] = T["iaother"] + R[j]["iaother"]
     }
   }
-  # Column H total: "texts with page#"
+  # Column H total: "Mediatype dark"
+  for(j in R) {
+    for(k in R[j]) {
+      if(k == "iadark") 
+        T["iadark"] = T["iadark"] + R[j]["iadark"]
+    }
+  }
+  # Column I total: "texts with page#"
   for(j in R) {
     for(k in R[j]) {
       if(k == "iapagen") 
         T["iapagen"] = T["iapagen"] + R[j]["iapagen"]
     }
   }
-  # Column I total: "Number of Google Books hits"
+  # Column J total: "Number of Google Books hits"
   for(j in R) {
     for(k in R[j]) {
       if(k == "gbhits") 
@@ -638,12 +650,12 @@ function makeArrays(  i,a,b,d,j,k) {
 }
 
 # Given a line:
-#   nl.wikipedia.org 20190925 1979055 178863|116216|832|552|6386|4790|1496|842|0|0|0|0|0|0|0
+#   nl.wikipedia.org 20190925 1979055 178863|116216|832|552|6386|4790|1496|842|0|0|0|0|0|0|0|0
 # Return a given key value ie. key of "1" will return 178863
 #
 function returnKey(line, key,  a,b,s,i,t) {
 
-  t = "iahits=1&iapages=2&althits=3&altpages=4&ishits=5&ispages=6&wchits=7&wcpages=8&gbhits=9&iatexts=10&iaaudio=11&iamovies=12&iaimage=13&iaother=14&iapagen=15"
+  t = "iahits=1&iapages=2&althits=3&altpages=4&ishits=5&ispages=6&wchits=7&wcpages=8&gbhits=9&iatexts=10&iaaudio=11&iamovies=12&iaimage=13&iaother=14&iapagen=15&iadark=16"
   s = split(t, a, /[&]/)
   for(i = 1; i <= s; i++) {
     split(a[i], b, /[=]/)

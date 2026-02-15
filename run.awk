@@ -37,7 +37,7 @@ BEGIN {
   G["runlogtxt"] = G["home"] "runlog.txt"
 
   if(!checkexists(G["runlogtxt"])) {
-    print G["runlogtxt"] " is missing. No sites are running?"
+    print G["runlogtxt"] " is missing. No sites are/were running?"
     exit
   }
 
@@ -77,22 +77,22 @@ function main() {
   command = Exe["ps"] " aux | " Exe["grep"] " arcstat.awk | " Exe["grep"] " -v tcsh | " Exe["grep"] " -v grep "
   if(Debug) 
     stdErr(command)
-  ps = sys2var(command)
+  pso = sys2var(command)
   if(Debug) 
-    stdErr(ps)
-  for(i = 1; i <= splitn(ps "\n", psa, i); i++) {
+    stdErr(pso)
+  for(i = 1; i <= splitn(pso "\n", psa, i); i++) {
     if(split(psa[i], psb, " ") != 17) continue
     PS[psb[15]][psb[17]] = psb[2]
   }  
 
   if(Debug) {
-# en.wikipedia.org.allpages.done.save
+  # en.wikipedia.org.allpages.done.save
     
   }
 
   if(Debug || argKill) {
     if(Debug) {
-      stdErr(length(PS) "\n----\nPS items")
+      stdErr(length(PS) "\n----\nPS items\n")
       j = 0
     }
     if(length(PS) > 0) {
@@ -127,7 +127,7 @@ function main() {
   # Step 2: load runlog.txt and if not in PS[][] then run it
 
   if(Debug) 
-    stdErr(j "\n----\nrunlog.txt")
+    stdErr(j "\n----\n" G["runlogtxt"] "\n")
 
   j = 0
   for(i = 1; i <= splitn(G["runlogtxt"], rla, i); i++) {
@@ -136,7 +136,16 @@ function main() {
       stdErr(rla[i])
       j++
     }
-    if(empty(PS[rlb[1]][rlb[2]])) {
+
+    doit = 0
+    if(length(PS) != 0) {
+      if(empty(PS[rlb[1]][rlb[2]]))
+        doit = 1
+    }
+    else 
+      doit = 2
+
+    if(doit != 0) {
       command = "(" G["home"] "arcstat.awk -h " rlb[1] " -d " rlb[2] ") &"
       if(Debug) 
         stdErr("Will run if -r): " command)
@@ -147,8 +156,10 @@ function main() {
       }
     }
     else {
-      if(!Debug) 
-        stdErr("Already running: " rlb[1] "." rlb[2])
+      if(!Debug) { 
+        if(doit == 0)
+          stdErr("Already running: " rlb[1] "." rlb[2])
+      }
     }
   }
   if(Debug) {

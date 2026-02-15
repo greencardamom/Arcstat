@@ -18,6 +18,9 @@ AWKPATH=.:/home/greenc/BotWikiAwk/lib:/usr/share/awk
 
 #Min     Hour     Day Of Month     Month     Day of Week     Command / Script
 
+# Backup VMs to rabbit:~/Backup/VMs/host-agros/
+5        3        *                *         4               /usr/bin/rsync --delete -azh --progress -e "/usr/bin/ssh -i /home/greenc/.ssh/id_rsa" /home/greenc/VirtualBox\ VMs/ greenc@192.168.1.16:/home/greenc/Backup/VMs/host-agros/
+
 # make arcstat HTML and push to Toolforge
 15       11,22    *                *         *               /home/greenc/toolforge/arcstat/makehtml
 
@@ -30,3 +33,7 @@ AWKPATH=.:/home/greenc/BotWikiAwk/lib:/usr/share/awk
 # Make a backup copty of master.db in ~/www where it gets uploaded by push.csh to Toolforge for off-site backup
 41       01       *                *         *               /usr/bin/cp /home/greenc/arcstatData/db/master.db /home/greenc/arcstatData/www
 
+#
+# NVMe drive health check
+#
+55 6,18 * * * /home/greenc/scripts/nvme-sentry.csh --out email
