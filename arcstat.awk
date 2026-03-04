@@ -8,7 +8,7 @@
 
 # The MIT License (MIT)
 #
-# Copyright (c) 2019 by User:GreenC (at en.wikipedia.org)
+# Copyright (c) 2019-2026 by User:GreenC (at en.wikipedia.org)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,7 @@ BEGIN { # Bot cfg
   _defaults = "home      = /home/greenc/toolforge/arcstat/ \
                emailfp   = /home/greenc/scripts/secrets/greenc.email \
                userid    = User:GreenC \
-               version   = 1.5 \
+               version   = 1.6 \
                copyright = 2026"
 
   asplit(G, _defaults, "[ ]*[=][ ]*", "[ ]{9,}")
@@ -119,13 +119,16 @@ BEGIN {
 
 function main() {
 
-  if( isRunning() )  # Check prior to anything else
-    exit
+  if( isRunning() ) { # Check prior to anything else
+    healthcheckwatch()
+  }
 
   if( startup() ) 
     runSearch()
 
   runlog("remove")
+
+  healthcheckwatch()
 
 }
 
@@ -246,6 +249,11 @@ function runSearch(  i,a,c,j,bz,sz,ez,sp,z,command,dn,la,startpoint,offset,endal
   #                      each new P["blsize"] block. If the bot halts mid-way through, it will pick up where left off.
 
   else if(P["BM"] == 1) {
+
+    # Detect if this is a fresh yearly rebuild
+    if (!checkexists(P["db"] P["key"] ".index.db")) {
+        P["rebuild_mode"] = 1
+    }
 
     # Establish startpoint ie. the line number in allpages.db where processing will begin
 
@@ -521,62 +529,78 @@ function syncDumps(db) {
 # ONLY download content for articles that have changed since the last index.
 # Returns a string: "Title\035Timestamp\035Content\034..."
 #
-function check_batch(titles_string,    urlBase, urlQuery, jsonin, jsona, i, results, id, ts, title, content, ts_map, content_map, inx_date, fetch_str, enc, urlQuery2, jsonin2, jsona2, t2, c2) {
+#
+# Get timestamps and wiki content for up to 50 articles in one API call
+# Returns a string: "Title1=Timestamp|Title2=Timestamp..."
+#
+# Get timestamps for up to x# articles.
+# ONLY download content for articles that have changed since the last index.
+# Returns a string: "Title\035Timestamp\035Content\034..."
+#
+function check_batch(titles_string,    urlBase, urlQuery, jsonin, jsona, i, results, id, ts, title, content, ts_map, content_map, inx_date, fetch_str, enc, urlQuery2, jsonin2, jsona2, t2, c2, current_time) {
 
     urlBase = "https://" Hostname "." Domain "/w/api.php"
+    current_time = systime() # Get current Unix epoch for rebuilds
 
     # =========================================================================
-    # STAGE 1: Fetch Timestamps Only (Very Fast / Low Bandwidth)
+    # REBUILD MODE: Skip fetching timestamps, fetch all content, timestamp = today
     # =========================================================================
-    urlQuery = "action=query&prop=revisions&titles=" titles_string "&rvprop=timestamp&format=json&formatversion=2&maxlag=10&origin=*"
+    if (P["rebuild_mode"] == 1) {
+        fetch_str = titles_string
+    } 
+    else {
+        # =========================================================================
+        # STAGE 1: Fetch Timestamps Only (Very Fast / Low Bandwidth)
+        # =========================================================================
+        urlQuery = "action=query&prop=revisions&titles=" titles_string "&rvprop=timestamp&format=json&formatversion=2&maxlag=10&origin=*"
         
-    if(length(urlBase) + length(urlQuery) + 1 > 8000) {
-      sub("[&?]origin=[*]", "", urlQuery) 
-      jsonin = getjsonin(urlBase, urlQuery)
-    } else {
-      jsonin = getjsonin(urlBase "?" urlQuery)
-    }
+        if(length(urlBase) + length(urlQuery) + 1 > 8000) {
+          sub("[&?]origin=[*]", "", urlQuery) 
+          jsonin = getjsonin(urlBase, urlQuery)
+        } else {
+          jsonin = getjsonin(urlBase "?" urlQuery)
+        }
 
-    if (empty(jsonin)) return ""
+        if (empty(jsonin)) return ""
                 
-    if (query_json(jsonin, jsona) >= 0) {
-        for (i = 1; ; i++) {
-            id = "query" SUBSEP "pages" SUBSEP i
-            if (!((id SUBSEP "title") in jsona)) break
-            
-            title = jsona[id SUBSEP "title"]
-            ts = jsona[id SUBSEP "revisions" SUBSEP 1 SUBSEP "timestamp"]
-            
-            if (!empty(ts)) {
-                ts = d82unix(gsubi("[-]", "", substr(ts, 1, 10)))
-            } else { 
-                ts = 0 
+        if (query_json(jsonin, jsona) >= 0) {
+            for (i = 1; ; i++) {
+                id = "query" SUBSEP "pages" SUBSEP i
+                if (!((id SUBSEP "title") in jsona)) break
+                
+                title = jsona[id SUBSEP "title"]
+                ts = jsona[id SUBSEP "revisions" SUBSEP 1 SUBSEP "timestamp"]
+                
+                if (!empty(ts)) {
+                    ts = d82unix(gsubi("[-]", "", substr(ts, 1, 10)))
+                } else { 
+                    ts = 0 
+                }
+                ts_map[title] = ts
             }
-            # Store the timestamp locally
-            ts_map[title] = ts
+        }
+
+        # =========================================================================
+        # STAGE 2: Compare with local Index to build a "Needs Download" list
+        # =========================================================================
+        fetch_str = ""
+        for (title in ts_map) {
+            inx_date = 0
+            if (P["index"] && !empty(Index[title]["date"])) {
+                inx_date = d82unix(Index[title]["date"])
+            }
+            
+            # If the API timestamp is newer than our index (or it's a new article)
+            if (int(ts_map[title]) > int(inx_date)) {
+                enc = urlencodeawk(title, "rawphp")
+                if (empty(fetch_str)) fetch_str = enc
+                else fetch_str = fetch_str "|" enc
+            }
         }
     }
 
     # =========================================================================
-    # STAGE 2: Compare with local Index to build a "Needs Download" list
-    # =========================================================================
-    fetch_str = ""
-    for (title in ts_map) {
-        inx_date = 0
-        if (P["index"] && !empty(Index[title]["date"])) {
-            inx_date = d82unix(Index[title]["date"])
-        }
-        
-        # If the API timestamp is newer than our index (or it's a new article)
-        if (int(ts_map[title]) > int(inx_date)) {
-            enc = urlencodeawk(title, "rawphp")
-            if (empty(fetch_str)) fetch_str = enc
-            else fetch_str = fetch_str "|" enc
-        }
-    }
-
-    # =========================================================================
-    # STAGE 3: Fetch Content ONLY for the changed articles
+    # STAGE 3: Fetch Content ONLY for the changed articles (or all if rebuilding)
     # =========================================================================
     if (!empty(fetch_str)) {
         urlQuery2 = "action=query&prop=revisions&titles=" fetch_str "&rvprop=content&rvslots=main&format=json&formatversion=2&maxlag=10&origin=*"
@@ -596,6 +620,11 @@ function check_batch(titles_string,    urlBase, urlQuery, jsonin, jsona, i, resu
                 t2 = jsona2[id SUBSEP "title"]
                 c2 = jsona2[id SUBSEP "revisions" SUBSEP 1 SUBSEP "slots" SUBSEP "main" SUBSEP "content"]
                 content_map[t2] = c2
+                
+                # If we are rebuilding, we skipped Stage 1. Inject today's timestamp now.
+                if (P["rebuild_mode"] == 1) {
+                    ts_map[t2] = current_time
+                }
             }
         }
     }
@@ -613,82 +642,6 @@ function check_batch(titles_string,    urlBase, urlQuery, jsonin, jsona, i, resu
         }
     }
 
-    return results
-}
-
-
-function check_batch_old(titles_string,    urlBase, urlQuery, jsonin, jsona, i, results, id, ts, title, content) {
-
-    urlBase = "https://" Hostname "." Domain "/w/api.php"
-    urlQuery = "action=query&prop=revisions&titles=" titles_string "&rvprop=timestamp|content&rvslots=main&format=json&formatversion=2&maxlag=10&origin=*"
-        
-    if(length(urlBase) + length(urlQuery) + 1 > 8000) {
-      sub("[&?]origin=[*]", "", urlQuery)  # this breaks WMF POST for some reason but is good for GET
-      jsonin = getjsonin(urlBase, urlQuery)
-    }
-    else 
-      jsonin = getjsonin(urlBase "?" urlQuery)
-
-    if (empty(jsonin)) return ""
-               
-    if (query_json(jsonin, jsona) >= 0) {
-        for (i = 1; ; i++) {
-            id = "query" SUBSEP "pages" SUBSEP i
-            if (!((id SUBSEP "title") in jsona)) break
-            
-            title = jsona[id SUBSEP "title"]
-            ts = jsona[id SUBSEP "revisions" SUBSEP 1 SUBSEP "timestamp"]
-            # Get the actual page content from the slots
-            content = jsona[id SUBSEP "revisions" SUBSEP 1 SUBSEP "slots" SUBSEP "main" SUBSEP "content"]
-            
-            if (!empty(ts)) {
-                ts = d82unix(gsubi("[-]", "", substr(ts, 1, 10)))
-            } else {
-                ts = 0 
-            }
-
-            # We use a special separator \035 (Group Separator) for title/ts/content 
-            # and \034 (File Separator) between articles to avoid conflicts with pipes
-            if (empty(results)) {
-                results = title "\035" ts "\035" content
-            } else {
-                results = results "\034" title "\035" ts "\035" content
-            }
-        }
-    }
-    return results
-}
-
-function check_batch_orig(titles_string,    url, jsonin, jsona, i, results, id, ts, title) {
-    url = "https://" Hostname "." Domain "/w/api.php?action=query&prop=revisions&titles=" urlencodeawk(titles_string, "rawphp") "&rvprop=timestamp&format=json&formatversion=2&maxlag=10&origin=*"
-               
-    jsonin = getjsonin(url)
-    if (empty(jsonin)) return ""
-               
-    if (query_json(jsonin, jsona) >= 0) {
-        for (i = 0; ; i++) {
-            # You must use SUBSEP here because id is a variable
-            id = "query" SUBSEP "pages" SUBSEP i
-            
-            # Now we check if this page exists in the results
-            if (!((id SUBSEP "title") in jsona)) break
-            
-            title = jsona[id SUBSEP "title"]
-            ts = jsona[id SUBSEP "revisions" SUBSEP 0 SUBSEP "timestamp"]
-            
-            if (!empty(ts)) {
-                ts = d82unix(gsubi("[-]", "", substr(ts, 1, 10)))
-            } else {
-                ts = 0 
-            }
-
-            if (empty(results)) {
-                results = title "=" ts
-            } else {
-                results = results "|" title "=" ts
-            }
-        }
-    }
     return results
 }
 
@@ -1128,52 +1081,84 @@ function getallpages(url,apiURL,apfilterredir,aplimit,         jsonin,jsonout,co
 #
 # Get jsonin with max lag/error retries
 #
-function getjsonin(urlBase, urlQuery,  i,jsonin,pre,res,retries) {
+function getjsonin(urlBase, urlQuery,  i,jsonin,pre,res,retries,v_sleep,v_maxlag,m) {
 
-            retries = 10 
+    retries = 10 
+    pre = "API error: "
+    v_sleep = 5
+    v_maxlag = 0 # We'll parse the initial value from the URL
 
-            pre = "API error: "
+    for(i = 1; i <= retries; i++) {
+        
+        # 1. Execute the request
+        if(empty(urlQuery)) 
+            jsonin = http2var(urlBase)  
+        else 
+            jsonin = http2varPOST(urlBase, urlQuery) 
 
-            for(i = 1; i <= retries; i++) {
+        res = apierror(jsonin, "json")
+        
+        # 2. Handle Success
+        if( res ~ "OK")
+            break
 
-              if(empty(urlQuery)) 
-                  jsonin = http2var(urlBase)  # GET
-              else 
-                  jsonin = http2varPOST(urlBase, urlQuery) 
-
-              res = apierror(jsonin, "json")
-              
-              if( res ~ "maxlag") {
-                if(i == retries) {
-                  parallelWrite(pre jsonin " for " P["key"] " ---- " curtime(), P["log"] P["key"] ".syslog", Engine)
-                  email(Exe["from_email"], Exe["to_email"], "NOTIFY: " BotName " Maxlag timeout in getjsonin() after " retries " tries", "")
-                  runlog("remove")
-                  exit
-                }
-                sleep(5, "unix") # Increased sleep for maxlag
-              }
-              else if( res ~ "error") {
-                if(i == 5) {
-                  parallelWrite(pre jsonin " for " P["key"] " ---- " curtime(), P["log"] P["key"] ".syslog", Engine)
-                  email(Exe["from_email"], Exe["to_email"], "NOTIFY: " BotName " Error in getjsonin() after 5 tries", "")
-                  runlog("remove")
-                  exit
-                }
-                sleep(10, "unix")
-              }
-              else if( res ~ "empty") {
-                if(i == 5) {
-                  parallelWrite(pre " Received empty response for " P["key"] " ---- " curtime(), P["log"] P["key"] ".syslog", Engine)
-                  email(Exe["from_email"], Exe["to_email"], "NOTIFY: " BotName " Empty response in getjsonin() after 5 tries", "")
-                  runlog("remove")
-                  exit
-                }
-                sleep(15, "unix") # Jittered wait for empty responses
-              }
-              else if( res ~ "OK")
-                break
+        # 3. Handle Maxlag
+        if( res ~ "maxlag") {
+            if(i == retries) {
+                parallelWrite(pre jsonin " for " P["key"] " ---- " curtime(), P["log"] P["key"] ".syslog", Engine)
+                email(Exe["from_email"], Exe["to_email"], "NOTIFY: " BotName " Maxlag timeout in getjsonin()", "Failed after " i " tries. Last maxlag value was " v_maxlag)
+                runlog("remove")
+                exit
             }
-            return jsonin
+
+            # Wait progressively: 5, 6, 7... cap 15
+            sleep(v_sleep, "unix")
+            if (v_sleep < 15) v_sleep++
+
+            # Increase maxlag value in the URL strings
+            # We look for &maxlag=N 
+            # If not found, we don't modify (assumes system default)
+            
+            # Extract current maxlag if we don't have it yet (first failure)
+            if (v_maxlag == 0) {
+                if (match(urlBase, /[&]maxlag=([0-9]+)/, m)) v_maxlag = int(m[1])
+                else if (match(urlQuery, /[&]maxlag=([0-9]+)/, m)) v_maxlag = int(m[1])
+                else v_maxlag = 10 # Fallback start if none found
+            }
+
+            v_maxlag += 5
+            if (v_maxlag > 30) v_maxlag = 30
+
+            # Update the URLs with the new value
+            sub(/[&]maxlag=[0-9]+/, "&maxlag=" v_maxlag, urlBase)
+            sub(/[&]maxlag=[0-9]+/, "&maxlag=" v_maxlag, urlQuery)
+
+            continue 
+        }
+
+        # 4. Handle generic Error
+        else if( res ~ "error") {
+            if(i == 5) {
+                parallelWrite(pre jsonin " for " P["key"] " ---- " curtime(), P["log"] P["key"] ".syslog", Engine)
+                email(Exe["from_email"], Exe["to_email"], "NOTIFY: " BotName " Error in getjsonin() after " i " tries", jsonin)
+                runlog("remove")
+                exit
+            }
+            sleep(10, "unix")
+        }
+
+        # 5. Handle Empty Response
+        else if( res ~ "empty") {
+            if(i == 5) {
+                parallelWrite(pre " Received empty response for " P["key"] " ---- " curtime(), P["log"] P["key"] ".syslog", Engine)
+                email(Exe["from_email"], Exe["to_email"], "NOTIFY: " BotName " Empty response in getjsonin() after " i " tries", jsonin)
+                runlog("remove")
+                exit
+            }
+            sleep(15, "unix") 
+        }
+    }
+    return jsonin
 }
 
 #
@@ -1552,3 +1537,50 @@ function runlog(s,  command,res,fp,c,b,a,i,k) {
   }
 }
 
+#
+# Ping Healthcheckwatch API
+#
+# NOTE: If you change the cadence in the crontab this function will need to be modified
+# NOTE: Healthcheckwatch is optional you can set the first line to "exit" to nullify it
+#
+# Git: https://github.com/greencardamom/HealthcheckWatch
+# Library: ~/BotWikiAwk/lib/syscfg.awk
+# Wrapper: ~/scripts/healthcheckwatchping.sh
+#
+function healthcheckwatch(    id, timeout, subject, body, safe_domain, host_short) {
+
+  # 1. Uncomment next line to nullify using Healthcheckwatch
+  # exit
+
+  # 2. Determine actual system host (luego or quepasa)
+  host_short = sys2var("hostname")
+  sub(/\..*$/, "", host_short) 
+
+  # 3. Sanitize Domain (wikipedia.org -> wikipedia)
+  safe_domain = Domain
+  sub(/\.[a-z]+$/, "", safe_domain)
+  
+  # 4. Construct Unique ID 
+  id = host_short "-arcstat-" Hostname "-" safe_domain
+
+  # 5. Determine Timeout based on cron schedule
+  timeout = 750  # Default: Monthly
+
+  if (Hostname == "en" && safe_domain == "wikipedia") {
+      timeout = 3000 # Irregular
+  }
+  else if (Hostname ~ /^(war|ar|vi|de|sv|ceb|arz)$/ || (Hostname == "nl" && safe_domain == "wikipedia") || (Hostname == "en" && safe_domain == "wiktionary")) {
+      timeout = 2250 # Quarterly
+  }
+  else if (Hostname ~ /^(el|simple|es|uk|ko|azb|pl|tr|fi|pt|be|ru|zh|no|ka|ur|hy|it|species|hu|az|sr|id)$/) {
+      timeout = 1500 # Bi-monthly
+  }
+
+  # 6. Construct Payload
+  subject = "NOTIFY (HCW): arcstat " Hostname " (" safe_domain ")"
+  body = host_short ": /home/greenc/toolforge/arcstat/arcstat.awk -h " Hostname " -d " Domain " (no response)"
+
+  # 7. Call Library Wrapper
+  hcw_ping(id, timeout, subject, body)
+
+}
